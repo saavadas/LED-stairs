@@ -17,9 +17,9 @@ void stepFader(bool dir, bool state) {
         case 2: staticColor(-1, STEP_AMOUNT - counter, STEP_AMOUNT); break;
         case 3: staticColor(-1, 0, STEP_AMOUNT - counter); break;
       }
+      show();
+      if (counter == STEP_AMOUNT) break;
     }
-    show();
-    if (counter == STEP_AMOUNT) break;
   }
   if (state == 1) {
     clear();

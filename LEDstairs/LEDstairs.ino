@@ -8,7 +8,7 @@
   Исходники на GitHub: https://github.com/AlexGyver/LEDstairs
   Нравится, как написан код? Поддержи автора! https://alexgyver.ru/support_alex/
   Автор: AlexGyver Technologies, 2019
-  https://AlexGyver.ru/
+  https://AlexGyver.ru/x
 */
 
 struct Step {
@@ -16,30 +16,6 @@ struct Step {
   uint16_t night_mode_bitmask;
 };
 
-<<<<<<< HEAD
-#define STRIP_LED_AMOUNT 6*42  // количество чипов WS2811/WS2812 на всех ступеньках. Для WS2811 кол-во чипов = кол-во светодиодов / 3
-#define STEP_AMOUNT 17        // количество ступенек
-
-// описание всех ступенек с возможностью подсветки ЛЮБЫХ ступенек в ночном режиме
-Step steps[STEP_AMOUNT] = {
-  { 6, 0b111111},   // 1
-  { 6, 0b000000 },   // 2
-  { 6, 0b000000},   // 3
-  { 6, 0b000000},   // 4
-  { 6, 0b000000},   // 5
-  { 6, 0b000000},   // 6
-  { 6, 0b000000},   // 7
-  { 6, 0b000000},   // 8
-  { 6, 0b000000},   // 9
-  { 6, 0b000000},   // 10
-  { 6, 0b000000},   // 11
-  { 6, 0b000000},   // 12
-  { 6, 0b000000},   // 13
-  { 6, 0b000000},   // 14
-  { 6, 0b000000},   // 15
-  { 6, 0b000000},   // 16
-  { 6, 0b111111 }    // 17
-=======
 #define STRIP_LED_AMOUNT 300  // количество чипов WS2811/WS2812 на всех ступеньках. Для WS2811 кол-во чипов = кол-во светодиодов / 3
 #define STEP_AMOUNT 15        // количество ступенек
 
@@ -60,7 +36,6 @@ Step steps[STEP_AMOUNT] = {
   { 20, 0b000000000000000000000 },   // 13
   { 20, 0b000000000000000000000 },   // 14
   { 20, 0b111111111111111111111 }    // 15
->>>>>>> without
 };
 #define AUTO_BRIGHT 1     // автояркость вкл(1)/выкл(0) (с фоторезистором)
 #define CUSTOM_BRIGHT 100  // ручная яркость
@@ -76,11 +51,7 @@ Step steps[STEP_AMOUNT] = {
 // если перепутаны сенсоры - можно поменять их местами в коде! Вот тут
 #define SENSOR_START 3   // пин датчика движения
 #define SENSOR_END 2     // пин датчика движения
-<<<<<<< HEAD
-#define STRIP_PIN 12     // пин ленты ступенек
-=======
 #define STRIP_PIN 13     // пин ленты ступенек
->>>>>>> without
 #define PHOTO_PIN A0     // пин фоторезистора
 
 #define ORDER_BGR       // порядок цветов ORDER_GRB / ORDER_RGB / ORDER_BRG
@@ -148,30 +119,14 @@ void setup() {
 }
 
 void loop() {
-<<<<<<< HEAD
-  handlePirSensor(&startPirSensor);
-  handlePirSensor(&endPirSensor);
-  if (systemIdleState || systemOffState) {
-=======
   /*handlePirSensor(&startPirSensor);
     handlePirSensor(&endPirSensor);
     if (systemIdleState || systemOffState) {
->>>>>>> without
     handlePhotoResistor();
     if (!isNightLight)
     handleNightLight();
     show();
     delay(50);
-<<<<<<< HEAD
-  } else {
-    static uint32_t tmr;
-    if (millis() - tmr >= effSpeed) {
-      tmr = millis();
-      staticColor(effectDirection, 0, STEP_AMOUNT);
-      show();
-    }
-    handleTimeout();
-=======
     } else {*/
   isNightLight = false;
   static uint32_t tmr;
@@ -179,7 +134,6 @@ void loop() {
     tmr = millis();
     staticColor(effectDirection, 0, STEP_AMOUNT);
     show();
->>>>>>> without
   }
   handleTimeout();
 }
