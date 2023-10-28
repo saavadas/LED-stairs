@@ -16,6 +16,7 @@ struct Step {
   uint16_t night_mode_bitmask;
 };
 
+<<<<<<< HEAD
 #define STRIP_LED_AMOUNT 6*42  // количество чипов WS2811/WS2812 на всех ступеньках. Для WS2811 кол-во чипов = кол-во светодиодов / 3
 #define STEP_AMOUNT 17        // количество ступенек
 
@@ -38,8 +39,29 @@ Step steps[STEP_AMOUNT] = {
   { 6, 0b000000},   // 15
   { 6, 0b000000},   // 16
   { 6, 0b111111 }    // 17
-};
+=======
+#define STRIP_LED_AMOUNT 300  // количество чипов WS2811/WS2812 на всех ступеньках. Для WS2811 кол-во чипов = кол-во светодиодов / 3
+#define STEP_AMOUNT 15        // количество ступенек
 
+// описание всех ступенек с возможностью подсветки ЛЮБЫХ ступенек в ночном режиме
+Step steps[STEP_AMOUNT] = {
+  { 20, 0b111111111111111111111 },   // первая ступенька 16 чипов, 0b0100100100100100 - каждый третий чип активен в ночном режиме
+  { 20, 0b000000000000000000000 },   // вторая ступенька 16 чипов, 0b0000000000000000 - не активен в ночном режиме
+  { 20, 0b000000000000000000000 },   // 3
+  { 20, 0b000000000000000000000 },   // 4
+  { 20, 0b000000000000000000000 },   // 5
+  { 20, 0b000000000000000000000 },   // 6
+  { 20, 0b000000000000000000000 },   // 7
+  { 20, 0b000000000000000000000 },   // 8
+  { 20, 0b000000000000000000000 },   // 9
+  { 20, 0b000000000000000000000 },   // 10
+  { 20, 0b000000000000000000000 },   // 11
+  { 20, 0b000000000000000000000 },   // 12
+  { 20, 0b000000000000000000000 },   // 13
+  { 20, 0b000000000000000000000 },   // 14
+  { 20, 0b111111111111111111111 }    // 15
+>>>>>>> without
+};
 #define AUTO_BRIGHT 1     // автояркость вкл(1)/выкл(0) (с фоторезистором)
 #define CUSTOM_BRIGHT 100  // ручная яркость
 
@@ -47,14 +69,18 @@ Step steps[STEP_AMOUNT] = {
 #define TIMEOUT 15            // секунд, таймаут выключения ступенек после срабатывания одного из датчиков движения
 
 #define NIGHT_LIGHT_COLOR mCOLOR(WHITE)  // по умолчанию белый
-#define NIGHT_LIGHT_BRIGHT 50  // 0 - 255 яркость ночной подсветки
+#define NIGHT_LIGHT_BRIGHT 75  // 0 - 255 яркость ночной подсветки
 #define NIGHT_PHOTO_MAX 500   // максимальное значение фоторезистора для отключения подсветки, при освещении выше этого подсветка полностью отключается
 
 // пины
 // если перепутаны сенсоры - можно поменять их местами в коде! Вот тут
 #define SENSOR_START 3   // пин датчика движения
 #define SENSOR_END 2     // пин датчика движения
+<<<<<<< HEAD
 #define STRIP_PIN 12     // пин ленты ступенек
+=======
+#define STRIP_PIN 13     // пин ленты ступенек
+>>>>>>> without
 #define PHOTO_PIN A0     // пин фоторезистора
 
 #define ORDER_BGR       // порядок цветов ORDER_GRB / ORDER_RGB / ORDER_BRG
@@ -82,11 +108,6 @@ Step steps[STEP_AMOUNT] = {
 LEDdata stripLEDs[STRIP_LED_AMOUNT];  // буфер ленты ступенек
 microLED strip(stripLEDs, STRIP_LED_AMOUNT, STRIP_PIN);  // объект лента (НЕ МАТРИЦА) из-за разного количества диодов на ступеньку!
 
-#if (RAILING == 1)
-LEDdata railingLEDs[RAILING_LED_AMOUNT];  // буфер ленты перил
-microLED railing(railingLEDs, RAILING_LED_AMOUNT, RAILING_PIN);  // объект лента
-#endif
-
 int effSpeed;
 int8_t effectDirection;
 byte curBright = CUSTOM_BRIGHT;
@@ -94,6 +115,7 @@ byte effectCounter;
 uint32_t timeoutCounter;
 bool systemIdleState;
 bool systemOffState;
+bool isNightLight = false;
 int steps_start[STEP_AMOUNT];
 
 struct PirSensor {
@@ -126,12 +148,21 @@ void setup() {
 }
 
 void loop() {
+<<<<<<< HEAD
   handlePirSensor(&startPirSensor);
   handlePirSensor(&endPirSensor);
   if (systemIdleState || systemOffState) {
+=======
+  /*handlePirSensor(&startPirSensor);
+    handlePirSensor(&endPirSensor);
+    if (systemIdleState || systemOffState) {
+>>>>>>> without
     handlePhotoResistor();
+    if (!isNightLight)
     handleNightLight();
+    show();
     delay(50);
+<<<<<<< HEAD
   } else {
     static uint32_t tmr;
     if (millis() - tmr >= effSpeed) {
@@ -140,8 +171,19 @@ void loop() {
       show();
     }
     handleTimeout();
+=======
+    } else {*/
+  isNightLight = false;
+  static uint32_t tmr;
+  if (millis() - tmr >= effSpeed) {
+    tmr = millis();
+    staticColor(effectDirection, 0, STEP_AMOUNT);
+    show();
+>>>>>>> without
   }
+  handleTimeout();
 }
+//}
 
 
 void handlePhotoResistor() {
@@ -158,12 +200,13 @@ void handlePhotoResistor() {
 }
 
 void handleNightLight() {
-  EVERY_MS(60000) {
+  EVERY_MS(6000) {
     nightLight();
   }
 }
 
 void nightLight() {
+  isNightLight = true;
   if (systemOffState) {
     Serial.println("System OFF ");
     clear();

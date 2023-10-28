@@ -72,12 +72,12 @@ void fillStepWithBitMask(int8_t num, LEDdata color, uint32_t bitMask) {
 
 void animatedSwitchOff(int bright) {
   int changeBright = bright;
-  do {
+  while (changeBright > 0) {
     delay(50);
     setBrightness(changeBright);
     show();
     changeBright -= 5;
-  } while (changeBright > 0);
+  }
 }
 
 void animatedSwitchOn(int bright) {
@@ -92,21 +92,12 @@ void animatedSwitchOn(int bright) {
 
 void setBrightness(int brightness) {
   strip.setBrightness(brightness);
-#if (RAILING == 1)
-  railing.setBrightness(brightness);
-#endif
 }
 
 void show() {
   strip.show();
-#if (RAILING == 1)
-  railing.show();
-#endif
 }
 
 void clear() {
   strip.clear();
-#if (RAILING == 1)
-  railing.clear();
-#endif
 }
