@@ -42,62 +42,74 @@ uint32_t getPixColor(CRGB thisPixel) {
 
 // ========= смена цвета общая
 void staticColor(int8_t dir, byte from, byte to) {
-  effSpeed = 100;
-  byte thisBright;
-  static byte colorCounter = 0;
-  colorCounter += 2;
+  LEDdata color = mRGB(44, 228, 228); //МЕНЯТЬ ЦВЕТ ТУТ
   FOR_i(0, STEP_AMOUNT) {
-    thisBright = 255;
-    if (i < from || i >= to) thisBright = 0;
-    fillStep(i, mHSV(colorCounter, 255, thisBright));
-  }
-}
-
-// ========= залить ступеньку цветом (служебное)
-void fillStep(int8_t num, LEDdata color) {
-  if (num >= STEP_AMOUNT || num < 0) return;
-  for (int i = steps_start[num]; i < steps_start[num] + steps[num].led_amount; i++) {
-    stripLEDs[i] = color;
-  }
-}
-
-void fillStepWithBitMask(int8_t num, LEDdata color, uint32_t bitMask) {
-  if (num >= STEP_AMOUNT || num < 0) return;
-  for (int i = steps_start[num]; i < steps_start[num] + steps[num].led_amount; i++) {
-    if (bitRead(bitMask, (i - steps_start[num]) % 16)) {
-      stripLEDs[i] = color;
+    if (i < from || i >= to) fillStep(i, mRGB(0, 0, 0));
+    else {
+      uint32_t tmr = millis();
+      while (millis() - tmr < 400) {}
+      fillStep(i, color);
+      //    Serial.println(i);}
     }
   }
 }
-
-void animatedSwitchOff(int bright) {
-  int changeBright = bright;
-  while (changeBright > 0) {
-    delay(50);
-    setBrightness(changeBright);
+  /*void staticColor(int8_t dir, byte from, byte to) {
+    LEDdata color = mRGB(44, 228, 228); //МЕНЯТЬ ЦВЕТ ТУТ
+    FOR_i(0, STEP_AMOUNT) {
+      if (i < from || i >= to) fillStep(i, mHSV(0, 255, 0));
+    //    EVERY_MS(300) {
+      else{
+        fillStep(i, color);
+    //    }
+      }
+    }
+    }*/
+  // ========= залить ступеньку цветом (служебное)
+  void fillStep(int8_t num, LEDdata color) {
+    if (num >= STEP_AMOUNT || num < 0) return;
+    for (int i = steps_start[num]; i < steps_start[num] + steps[num].led_amount; i++) {
+      stripLEDs[i] = color;
+    }
     show();
-    changeBright -= 5;
   }
-}
 
-void animatedSwitchOn(int bright) {
-  int changeBright = 0;
-  do {
-    delay(50);
-    setBrightness(changeBright);
-    show();
-    changeBright += 5;
-  } while (changeBright < bright);
-}
+  void fillStepWithBitMask(int8_t num, LEDdata color, uint32_t bitMask) {
+    if (num >= STEP_AMOUNT || num < 0) return;
+    for (int i = steps_start[num]; i < steps_start[num] + steps[num].led_amount; i++) {
+      if (bitRead(bitMask, (i - steps_start[num]) % 16)) {
+        stripLEDs[i] = color;
+      }
+    }
+  }
 
-void setBrightness(int brightness) {
-  strip.setBrightness(brightness);
-}
+  void animatedSwitchOff(int bright) {
+    int changeBright = bright;
+    while (changeBright > 0) {
+      delay(50);
+      setBrightness(changeBright);
+      show();
+      changeBright -= 5;
+    }
+  }
 
-void show() {
-  strip.show();
-}
+  void animatedSwitchOn(int bright) {
+    int changeBright = 0;
+    do {
+      delay(50);
+      setBrightness(changeBright);
+      show();
+      changeBright += 5;
+    } while (changeBright < bright);
+  }
 
-void clear() {
-  strip.clear();
-}
+  void setBrightness(int brightness) {
+    strip.setBrightness(brightness);
+  }
+
+  void show() {
+    strip.show();
+  }
+
+  void clear() {
+    strip.clear();
+  }

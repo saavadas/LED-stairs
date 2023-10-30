@@ -41,7 +41,7 @@ Step steps[STEP_AMOUNT] = {
 #define CUSTOM_BRIGHT 100  // ручная яркость
 
 #define FADR_SPEED 300         // скорость переключения с одной ступеньки на другую, меньше - быстрее
-#define TIMEOUT 15            // секунд, таймаут выключения ступенек после срабатывания одного из датчиков движения
+#define TIMEOUT 8            // секунд, таймаут выключения ступенек после срабатывания одного из датчиков движения
 
 #define NIGHT_LIGHT_COLOR mCOLOR(WHITE)  // по умолчанию белый
 #define NIGHT_LIGHT_BRIGHT 75  // 0 - 255 яркость ночной подсветки
@@ -54,8 +54,8 @@ Step steps[STEP_AMOUNT] = {
 #define STRIP_PIN 13     // пин ленты ступенек
 #define PHOTO_PIN A0     // пин фоторезистора
 
-#define ORDER_BGR       // порядок цветов ORDER_GRB / ORDER_RGB / ORDER_BRG
-#define COLOR_DEBTH 2   // цветовая глубина: 1, 2, 3 (в байтах)
+#define ORDER_RGB    // порядок цветов ORDER_GRB / ORDER_RGB / ORDER_BRG
+#define COLOR_DEBTH 3   // цветовая глубина: 1, 2, 3 (в байтах)
 
 // для разработчиков
 #include <microLED.h>
@@ -79,7 +79,7 @@ Step steps[STEP_AMOUNT] = {
 LEDdata stripLEDs[STRIP_LED_AMOUNT];  // буфер ленты ступенек
 microLED strip(stripLEDs, STRIP_LED_AMOUNT, STRIP_PIN);  // объект лента (НЕ МАТРИЦА) из-за разного количества диодов на ступеньку!
 
-int effSpeed;
+int effSpeed = 100;
 int8_t effectDirection;
 byte curBright = CUSTOM_BRIGHT;
 byte effectCounter;
@@ -129,13 +129,11 @@ void loop() {
     delay(50);
     } else {*/
   isNightLight = false;
-  static uint32_t tmr;
-  if (millis() - tmr >= effSpeed) {
-    tmr = millis();
-    staticColor(effectDirection, 0, STEP_AMOUNT);
-    show();
-  }
+  staticColor(effectDirection, 0, STEP_AMOUNT);
+  Serial.println("Done");
   handleTimeout();
+  //    clear();
+  //    show();
 }
 //}
 
@@ -154,7 +152,7 @@ void handlePhotoResistor() {
 }
 
 void handleNightLight() {
-  EVERY_MS(6000) {
+  EVERY_MS(300) {
     nightLight();
   }
 }
